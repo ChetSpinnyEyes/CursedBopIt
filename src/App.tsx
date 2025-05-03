@@ -2,19 +2,62 @@ import "./App.css";
 import { Canvas } from "@react-three/fiber";
 import Model from "./Model";
 import { Environment, OrbitControls } from "@react-three/drei";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+export function genCommand(): string {
+  const commands = ["BopIt", "TwistIt", "SpinIt", "PullIt"];
+  return commands[Math.floor(Math.random() * 4)];
+}
 
 function App() {
   const [pressed, setPressed] = useState("BopIt");
+  const [timer, setTimer] = useState(0);
+  const [command, setCommand] = useState(genCommand());
+  const [timeLimit, setTimeLimit] = useState(3);
+  const [gameOver, setGameOver] = useState(false);
+  const [score, setScore] = useState(0);
+
+  function handleToyClick(clickedName: string) {
+    setPressed(clickedName);
+    if (!gameOver && clickedName === command) {
+      setScore(score + 1);
+      setTimer(0);
+      setCommand(genCommand());
+    }
+  }
+
+  useEffect(() => {
+    if (gameOver) {
+      return;
+    }
+    if (timer > timeLimit) {
+      setGameOver(true);
+      return;
+    }
+    const timeoutId = window.setTimeout(() => {
+      setTimer(() => timer + 0.1);
+    }, 100);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [timer]);
   return (
-    <div id="canvasContainer">
-      <h1>{pressed}</h1>
-      <Canvas>
-        <Model setPressed={setPressed}></Model>
-        <OrbitControls></OrbitControls>
-        <Environment preset="studio" environmentIntensity={0.3}></Environment>
-      </Canvas>
-    </div>
+    <>
+      <div id="debugText">
+        <h1>{gameOver ? "game over" : command}</h1>
+        <h2>{"pressed: " + pressed}</h2>
+        <h2>{timer.toFixed(1)}</h2>
+        <h3>{"score: " + score}</h3>
+      </div>
+      <div id="canvasContainer">
+        <Canvas>
+          <Model onToyClick={handleToyClick}></Model>
+          <OrbitControls></OrbitControls>
+          <Environment preset="studio" environmentIntensity={0.3}></Environment>
+        </Canvas>
+      </div>
+    </>
   );
 }
 
