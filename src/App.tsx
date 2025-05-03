@@ -5,14 +5,25 @@ import { Environment, OrbitControls } from "@react-three/drei";
 import { useEffect, useState } from "react";
 
 export function genCommand(): string {
-  const commands = ["BopIt", "TwistIt", "SpinIt", "PullIt"];
-  return commands[Math.floor(Math.random() * 4)];
+  const commands = ["BopIt", "TwistIt", "SpinIt", "PullIt", "FlickIt"];
+  // audio
+  const randCommand = commands[Math.floor(Math.random() * commands.length)];
+  let fileName = `${randCommand}_Command.mp3`;
+  console.log("Chet audio", fileName);
+  if (randCommand === "BopIt") {
+    fileName = `Rabbit_${Math.floor(Math.random() * 3) + 1}.mp3`;
+  }
+  const commandAudio = new Audio(fileName);
+  commandAudio.volume = randCommand === "BopIt" ? 0.5 : 0.2;
+  commandAudio.play();
+
+  return randCommand;
 }
 
 function App() {
   const [pressed, setPressed] = useState("BopIt");
   const [timer, setTimer] = useState(0);
-  const [command, setCommand] = useState(genCommand());
+  const [command, setCommand] = useState(genCommand);
   const [timeLimit, setTimeLimit] = useState(3);
   const [gameOver, setGameOver] = useState(false);
   const [score, setScore] = useState(0);
@@ -29,9 +40,11 @@ function App() {
   useEffect(() => {
     if (gameOver) {
       return;
-    }
-    if (timer > timeLimit) {
+    } else if (timer > timeLimit) {
       setGameOver(true);
+      const gameOverAudio = new Audio("Lose_SFX.mp3");
+      gameOverAudio.volume = 0.2;
+      gameOverAudio.play();
       return;
     }
     const timeoutId = window.setTimeout(() => {
