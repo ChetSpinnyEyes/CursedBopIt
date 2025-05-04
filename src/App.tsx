@@ -4,12 +4,12 @@ import Model from "./Model";
 import { Environment, OrbitControls } from "@react-three/drei";
 import { useEffect, useState } from "react";
 
+export const commands = ["BopIt", "TwistIt", "SpinIt", "PullIt", "FlickIt"];
+
 export function genCommand(): string {
-  const commands = ["BopIt", "TwistIt", "SpinIt", "PullIt", "FlickIt"];
   // audio
   const randCommand = commands[Math.floor(Math.random() * commands.length)];
   let fileName = `${randCommand}_Command.mp3`;
-  console.log("Chet audio", fileName);
   if (randCommand === "BopIt") {
     fileName = `Rabbit_${Math.floor(Math.random() * 3) + 1}.mp3`;
   }
@@ -34,6 +34,7 @@ function App() {
       setScore(score + 1);
       setTimer(0);
       setCommand(genCommand());
+      setTimeLimit(timeLimit * 0.98);
     }
   }
 
@@ -59,8 +60,9 @@ function App() {
     <>
       <div id="debugText">
         <h1>{gameOver ? "game over" : command}</h1>
+        <button>start</button>
         <h2>{"pressed: " + pressed}</h2>
-        <h2>{timer.toFixed(1)}</h2>
+        <h2>{`${timer.toFixed(1)}/${timeLimit.toFixed(1)}`}</h2>
         <h3>{"score: " + score}</h3>
       </div>
       <div id="canvasContainer">
