@@ -21,7 +21,7 @@ export function genCommand(): string {
 }
 
 function App() {
-  const [pressed, setPressed] = useState("");
+  const [_pressed, setPressed] = useState("");
   const [timer, setTimer] = useState(-1);
   const [command, setCommand] = useState("");
   const [timeLimit, setTimeLimit] = useState(4);
