@@ -73,8 +73,6 @@ function App() {
         <button id="startButton" onClick={startGame}>
           start
         </button>
-        <h2>{"pressed: " + pressed}</h2>
-        <h2>{`${timer.toFixed(1)}/${timeLimit.toFixed(1)}`}</h2>
         <h3>{"score: " + score}</h3>
       </div>
       <div id="canvasContainer">
