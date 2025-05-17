@@ -30,6 +30,9 @@ export default function Model({
       buttonSFX.play();
 
       // speed up background music
+      if (backgroundMusic.current.paused) {
+        backgroundMusic.current.play();
+      }
       backgroundMusic.current.playbackRate *= 1.01;
 
       handleToyClick(clickedName);
