@@ -26,7 +26,7 @@ export default function Model({
     if (commands.includes(clickedName)) {
       const buttonSFX = new Audio(`${clickedName}_SFX.mp3`);
 
-      buttonSFX.volume = 0.2;
+      buttonSFX.volume = 0.1;
       buttonSFX.play();
 
       // speed up background music

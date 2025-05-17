@@ -14,25 +14,35 @@ export function genCommand(): string {
     fileName = `Rabbit_${Math.floor(Math.random() * 3) + 1}.mp3`;
   }
   const commandAudio = new Audio(fileName);
-  commandAudio.volume = randCommand === "BopIt" ? 0.5 : 0.2;
+  commandAudio.volume = randCommand === "BopIt" ? 0.7 : 0.4;
   commandAudio.play();
 
   return randCommand;
 }
 
 function App() {
-  const [pressed, setPressed] = useState("BopIt");
-  const [timer, setTimer] = useState(0);
-  const [command, setCommand] = useState(genCommand);
-  const [timeLimit, setTimeLimit] = useState(3);
-  const [gameOver, setGameOver] = useState(false);
+  const [pressed, setPressed] = useState("");
+  const [timer, setTimer] = useState(-1);
+  const [command, setCommand] = useState("");
+  const [timeLimit, setTimeLimit] = useState(4);
+  const [gameOver, setGameOver] = useState(true);
   const [score, setScore] = useState(0);
+
+  function startGame() {
+    setGameOver(false);
+    setCommand(genCommand());
+    // if 0, the same as start
+    setTimer(0);
+  }
 
   function handleToyClick(clickedName: string) {
     setPressed(clickedName);
     if (!gameOver && clickedName === command) {
       setScore(score + 1);
       setTimer(0);
+      // pass in function call to use result
+      // if pass in function, react will think is updater function
+      // and will pass in old value as param
       setCommand(genCommand());
       setTimeLimit(timeLimit * 0.98);
     }
@@ -60,7 +70,9 @@ function App() {
     <>
       <div id="debugText">
         <h1>{gameOver ? "game over" : command}</h1>
-        <button>start</button>
+        <button id="startButton" onClick={startGame}>
+          start
+        </button>
         <h2>{"pressed: " + pressed}</h2>
         <h2>{`${timer.toFixed(1)}/${timeLimit.toFixed(1)}`}</h2>
         <h3>{"score: " + score}</h3>
